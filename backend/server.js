@@ -1,17 +1,32 @@
-
 const express = require('express');
 const app = express();
-const path = require('path')
-const {StatusCodes} = require('http-status-codes')
+const path = require('path');
+const {StatusCodes} = require('http-status-codes');
+const cookieParser = require('cookie-parser')
+const cors = require('cors');
+
+const errorHandler = require('./middleware/errorHandler');
 const PORT = process.env.PORT || 3500;
 
-/**********************************
- *       ROUTES SECTION START     *
- ***********************************/
+/*******************************************
+ *       MIDDLEWARE SECTION START          *
+ ********************************************/
 
-// Added styling for better UI
+app.use(cors());
+
+app.use(express.json());
+
+app.use(cookieParser());
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 
+/*******************************************
+ *       MIDDLEWARE SECTION END            *
+ ********************************************/
+
+/*******************************************
+ *       ROUTES SECTION START              *
+ ********************************************/
 // Home page route for the API
 app.use('/', require('./routes/root'));
 
@@ -26,6 +41,14 @@ app.all('*', (req,res) => {
         res.type('txt').send('404 Not Found');
     }
 })
+
+/*******************************************
+ *       ROUTES SECTION END                *
+ ********************************************/
+
+// Error handler middleware (must be placed after all routes)
+app.use(errorHandler);
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

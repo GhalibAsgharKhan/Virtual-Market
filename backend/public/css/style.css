@@ -4,6 +4,7 @@
 }
 body {
     background-color: black;  
+    color: white;
     font-family: sans-serif;
     height: 100vh;
     display: flex;
